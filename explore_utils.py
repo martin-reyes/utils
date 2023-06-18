@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from IPython.display import display
@@ -21,7 +22,23 @@ def get_cat_and_cont_cols(df, num_unique=10):
     
     return cat_cols, cont_cols
 
+def plot_heatmap(df):
+    '''
+    Plots heatmap of DataFrame correlations
+    '''
+    mask = np.zeros_like(df.corr())
+    mask[np.triu_indices_from(mask)] = True
+
+    plt.figure(figsize=(len(df.columns), len(df.columns) * .5))
+    sns.heatmap(df.corr(), mask=mask, cmap='coolwarm',
+                         linewidths=.5, annot=True, vmin=-1, vmax=1, square=True)
+    plt.show()
+
 def explore_univariate_categorical_cols(df, cat_cols = None):
+    '''
+    Explores categorical features
+    Plots bar charts of each categorical features
+    '''
     
     # set default categorical columns
     if cat_cols == None:
@@ -37,10 +54,20 @@ def explore_univariate_categorical_cols(df, cat_cols = None):
         # bar plot
         plt.figure(figsize=(3, 2))
         sns.countplot(x=col, data=df)
+        # Annotate the bars
+        ax = plt.gca()
+        for p in ax.patches:
+            ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2, p.get_height()),
+                        ha='center', va='bottom')
         plt.show()
         print()
         
+        
 def explore_univariate_continuous_cols(df, cont_cols = None):
+    '''
+    Explores continuous features
+    Plots histograms and boxplots of each continuous features
+    '''
     
     # set default categorical columns
     if cont_cols == None:
@@ -64,10 +91,14 @@ def explore_univariate_continuous_cols(df, cont_cols = None):
 
         plt.show()
         print()
+
         
 def explore_bivariate_cont_to_cat_target(df, target, cont_cols=None):
     '''
     Explores continuous feature relationships to categorical target
+    Provides descriptive stats for each target category
+    Shows continuous feature correlations for two-category target
+    Plots bar chart of feature averages for each target category
     '''
 
     # set default categorical columns
@@ -86,17 +117,26 @@ def explore_bivariate_cont_to_cat_target(df, target, cont_cols=None):
     for col in cont_cols:
         plt.figure(figsize=(3, 3)) 
         sns.barplot(x=target, y=col, data=df, estimator='mean')
+        # Annotate the bars
+        ax = plt.gca()
+        for p in ax.patches:
+            ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2, p.get_height()),
+                        ha='center', va='bottom')
         plt.title(f'{col} averages')
         # add line indicating estimate of all targets
         plt.axhline(df[col].mean(), label=f'Total {col} mean', color='red')
         # plt.legend()
         plt.show()
         print()
+        
+    plot_heatmap(df[cont_cols+[target]])
 
 
 def explore_bivariate_cat_to_cat_target(df, target, cat_cols=None):
     '''
     Explores categorical feature relationships to categorical target
+    Shows continuous feature "correlations" for two-category target
+    Plots bar chart of target frequencies for each categorical feature category
     '''
     # set default categorical columns
     if cat_cols == None:
@@ -111,9 +151,17 @@ def explore_bivariate_cat_to_cat_target(df, target, cat_cols=None):
     for col in cat_cols:
         plt.figure(figsize=(3, 3)) 
         sns.barplot(x=col, y=target, data=df, estimator='mean')
+        # Annotate the bars
+        ax = plt.gca()
+        for p in ax.patches:
+            ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2, p.get_height()),
+                        ha='center', va='bottom')
         # plt.title(f'{target} averages')
         # add line indicating estimate of all targets
         plt.axhline(df[target].mean(), label=f'Total {target} mean', color='red')
         # plt.legend()
         plt.show()
         print()
+        
+    plot_heatmap(df[cat_cols+[target]])
+
