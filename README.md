@@ -4,7 +4,7 @@ The functions in these python files are general tasks commonly run throughout th
 
 Also included in this directory are templates for a final report .ipynb, README.md, and work/test notebooks for each part of the DS pipeline,
 
-To run (if `utils` directory is in the home directory):
+To import a python module in this folder in any python file or notebook (if `utils` directory is in the home directory):
 
 ```
 import sys
