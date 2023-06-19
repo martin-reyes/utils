@@ -1,15 +1,17 @@
-## README
-
-# DS Pipeline Functions
+# utils
 
 The functions in these python files are general tasks commonly run throughout the DS pipeline. 
 
-To run:
+Also included in this directory are templates for a final report .ipynb, README.md, and work/test notebooks for each part of the DS pipeline,
+
+To run (if `utils` directory is in the home directory):
 
 ```
 import sys
 import os
-sys.path.append(os.path.expanduser("~") +'/utils')
+
+home_directory_path = os.path.expanduser('~')
+sys.path.append(home_directory_path +'/utils')
 ```
 
 then import the desired python modules.
