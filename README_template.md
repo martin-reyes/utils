@@ -21,11 +21,6 @@ by `NAME`
 
  
 ## Project Goals
- 
-* Discover drivers of customers churning.
-* Present key insights on these drivers.
-* Use main drivers to develop a machine learning model to predict churning customers.
-* Use insights and model evaluation to identify features to address when a customer is predicted to churn.
 
 ```
 * Goal 1 (e.g. explore goal(s))
@@ -116,6 +111,13 @@ Best performing ML model:
  
 ## Recommendations
 
+
+## Next Steps
+With more time, we can:
+- Do multivariate analysis and see how a combination or columns relate to churn 
+- Develop a better-performing model by feature engineering, feature scaling, running other ML classifiers, etc.
+- If we want to take action with any of the recommendations, we can change our performance metric to precision or recall, and predict and target customers this way.
+- Gather more data and features
 
 
 [Back to top](#top)

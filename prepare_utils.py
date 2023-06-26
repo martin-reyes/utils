@@ -1,6 +1,27 @@
 import acquire as a
 from sklearn.model_selection import train_test_split
 
+def identify_cols_with_white_space(df):
+    '''
+    Takes in a DataFrame
+    Prints columns with any values that are whitespace
+    Returns columns in a list
+    '''
+    
+    cols_w_white_space = []
+    
+    for col in df.columns:
+        # check string/object columns
+        if df[col].dtype == 'O':
+            # check for any values in the column that are empty or whitespace
+            is_whitespace = df[col].str.isspace()
+            has_whitespace = is_whitespace.any()
+            if has_whitespace:
+                print(f'{col} has whitespace')
+                cols_w_white_space.append(col)
+    return cols_w_white_space
+
+
 def split_data(df, test_size=.2, validate_size=.2, stratify_col=None, random_state=None):
     '''
     take in a DataFrame and return train, validate, and test DataFrames;
