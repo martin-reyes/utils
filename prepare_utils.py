@@ -1,4 +1,3 @@
-import acquire as a
 from sklearn.model_selection import train_test_split
 
 def identify_cols_with_white_space(df):
@@ -21,6 +20,10 @@ def identify_cols_with_white_space(df):
                 cols_w_white_space.append(col)
     return cols_w_white_space
 
+# # replace empty space with np.nan and convert column to float
+# df[col] = df[col].replace(r'^\s*$', np.nan, regex=True).astype(float)
+# # impute median
+# df[col] = df[col].fillna( df[col].median())
 
 def split_data(df, test_size=.2, validate_size=.2, stratify_col=None, random_state=None):
     '''
