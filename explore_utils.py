@@ -27,12 +27,11 @@ def plot_heatmap(df):
     '''
     Plots heatmap of DataFrame correlations
     '''
-    mask = np.zeros_like(df.corr())
-    mask[np.triu_indices_from(mask)] = True
-
     plt.figure(figsize=(len(df.columns), len(df.columns) * .6))
-    sns.heatmap(df.corr(), mask=mask, cmap='coolwarm',
-                         linewidths=.5, annot=True, vmin=-1, vmax=1, square=True)
+    
+    mask = np.triu(np.ones_like(df.corr().iloc[1:,:-1]),k=1)
+    sns.heatmap(df.corr().iloc[1:,:-1], mask=mask, linewidths=.5, annot=True,
+                         cmap='RdYlGn', vmin=-1, vmax=1, square=True)
     plt.show()
 
     
@@ -238,7 +237,6 @@ def plot_bivariate_cat_to_cat_target_charts(df, target, col):
     sns.barplot(x=col, y=target, data=df, errorbar=None,  order=order,
                 ax=axes[0])
     # Annotate the bars
-    ax = plt.gca()
     for p in axes[0].patches:
         axes[0].annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2, p.get_height()),
                     ha='center', va='bottom')
@@ -263,4 +261,64 @@ def plot_bivariate_cat_to_cat_target_charts(df, target, col):
     axes[1].set_xlabel(col_label)
     axes[1].set_ylabel(target.capitalize())
 #     axes[1].set_yticklabels(['No', 'Yes'], ha='center')
+    plt.show()
+
+def explore_bivariate_cont_to_cont_target(df, target, cont_cols=None):
+    '''
+    Explores categorical feature relationships to continuous target
+    '''
+    if cont_cols == None:
+        cont_cols = get_cat_and_cont_cols(df)[1]
+    
+    sns.pairplot(data=df[cont_cols], kind='reg', corner=True,
+                 plot_kws={'scatter_kws':{'s':1, 'alpha':.5},
+                           'line_kws':{'linewidth':1, 'alpha':.5, 'color':'red'}})
+    plt.show()
+    
+    plt.figure(figsize=(len(train.columns), len(train.columns) * .6))
+
+    mask = np.triu(np.ones_like(df.corr().iloc[1:,:-1]),k=1)
+    sns.heatmap(df.corr().iloc[1:,:-1], mask=mask, linewidths=.5, annot=True,
+                         cmap='RdYlGn', vmin=-1, vmax=1, square=True)
+    plt.show()
+    
+    sns.heatmap(df.corr()[target].sort_values(ascending=False).to_frame(),
+            linewidths=.5, annot=True, cmap='RdYlGn',
+            vmin=-1, vmax=1, square=True)
+    plt.show()
+
+
+def explore_bivariate_cat_to_cont_target(df, target, cat_cols=None):
+    '''
+    Explores categorical feature relationships to continuous target
+    Provides descriptive stats for each feature category
+    '''
+#     if cat_cols == None:
+#         cat_cols = get_cat_and_cont_cols(df)[0]
+        
+    for col in cat_cols:
+        print(f'{col} group {target} stats')
+        display(df.groupby(col)[target].describe().T)
+        
+        plot_bivariate_cat_to_cont_target_charts(df, target, col)
+        
+
+def plot_bivariate_cat_to_cont_target_charts(df, target, col):
+    print(f'{col} group {target} averages')
+    sns.barplot(data=df, x=col, y=target, errorbar=None)
+    ax = plt.gca()
+    for p in ax.patches:
+        ax.annotate(f'{round(p.get_height())}', (p.get_x() + p.get_width() / 2, p.get_height()),
+                    ha='center', va='bottom')
+    plt.show()
+
+    print(f'{col} group {target} distributions')
+    sns.displot(data=df, x=target, col=col, hue=col)
+    plt.show()
+    sns.stripplot(data=df, x=col, y=target, hue=col, jitter=.3,
+                  size=1.5, legend=False)
+    plt.show()
+
+    print(f'{col} group {target} boxplots')
+    sns.boxplot(data=df, x=col, y=target)
     plt.show()
