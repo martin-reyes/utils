@@ -275,7 +275,7 @@ def explore_bivariate_cont_to_cont_target(df, target, cont_cols=None):
                            'line_kws':{'linewidth':1, 'alpha':.5, 'color':'red'}})
     plt.show()
     
-    plt.figure(figsize=(len(train.columns), len(train.columns) * .6))
+    plt.figure(figsize=(len(df.columns), len(df.columns) * .6))
 
     mask = np.triu(np.ones_like(df.corr().iloc[1:,:-1]),k=1)
     sns.heatmap(df.corr().iloc[1:,:-1], mask=mask, linewidths=.5, annot=True,
@@ -293,8 +293,8 @@ def explore_bivariate_cat_to_cont_target(df, target, cat_cols=None):
     Explores categorical feature relationships to continuous target
     Provides descriptive stats for each feature category
     '''
-#     if cat_cols == None:
-#         cat_cols = get_cat_and_cont_cols(df)[0]
+    if cat_cols == None:
+        cat_cols = get_cat_and_cont_cols(df)[0]
         
     for col in cat_cols:
         print(f'{col} group {target} stats')
